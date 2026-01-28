@@ -71,10 +71,4 @@ public class AddressObjectServiceTests : IDisposable
         await Assert.ThrowsAsync<FileNotFoundException>(() =>
             service.LoadAndFilterAddressObjectsAsync(emptyDir, addressLevels));
     }
-
-    // TODO: Добавить тесты с mock XML файлами
-    // Для этого потребуется:
-    // 1. Создать тестовые XML файлы с известным содержимым
-    // 2. Тестировать парсинг и фильтрацию
-    // 3. Тестировать группировку по уровням
 }

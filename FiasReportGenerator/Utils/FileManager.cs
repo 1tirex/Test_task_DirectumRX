@@ -29,7 +29,7 @@ public class FileManager : IFileManager
 
         foreach (var start in candidates)
         {
-            var solutionDir = FindUpwards(start, SolutionFileName);
+            var solutionDir = FindUpwardsOrInChildDirectories(start, SolutionFileName);
             if (solutionDir is not null)
             {
                 // Сначала проверяем родительскую директорию (предпочтительно, когда .sln находится в папке проекта)
@@ -163,7 +163,7 @@ public class FileManager : IFileManager
     /// <param name="start">Стартовая директория для поиска.</param>
     /// <param name="fileName">Имя файла для поиска.</param>
     /// <returns>Директория, содержащая файл, или null если файл не найден.</returns>
-    private static DirectoryInfo? FindUpwards(DirectoryInfo start, string fileName)
+    private static DirectoryInfo? FindUpwardsOrInChildDirectories(DirectoryInfo start, string fileName)
     {
         var current = start;
         while (current.Exists)
@@ -172,6 +172,21 @@ public class FileManager : IFileManager
             if (File.Exists(target))
             {
                 return current;
+            }
+
+            try
+            {
+                foreach (var child in current.EnumerateDirectories())
+                {
+                    var childTarget = Path.Combine(child.FullName, fileName);
+                    if (File.Exists(childTarget))
+                    {
+                        return child;
+                    }
+                }
+            }
+            catch
+            {
             }
 
             if (current.Parent is null)
