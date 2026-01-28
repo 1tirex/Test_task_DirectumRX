@@ -301,3 +301,4 @@ public class FiasReportGeneratorPerformanceTests : IAsyncLifetime
     }
     """;
 }
+
